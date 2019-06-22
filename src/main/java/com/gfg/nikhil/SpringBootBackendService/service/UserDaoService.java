@@ -2,6 +2,7 @@ package com.gfg.nikhil.SpringBootBackendService.service;
 
 import com.gfg.nikhil.SpringBootBackendService.model.User;
 import com.gfg.nikhil.SpringBootBackendService.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserDaoService {
 
     @Autowired
@@ -21,9 +23,18 @@ public class UserDaoService {
 
     }
 
-    public Optional<User> findUserById(Long id){
+    public User findUserById(Long id){
 
-        return userRepository.findById(id);
+        Optional<User> userOptional= userRepository.findById(id);
+
+        if(userOptional.isPresent()){
+            log.debug("User found for id {} "+id);
+            return userOptional.get();
+        }
+        else {
+            log.debug("User not found for id {} "+id);
+            throw new IllegalArgumentException();
+        }
     }
 
     public User createUser(User user){
